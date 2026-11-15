@@ -8,7 +8,7 @@ package modelo;
  *
  * @author Aaron
  */
-public enum Estadoreserva {
+public enum EstadoReserva {
     CONFIRMADA("Confirmada"),
     HOSPEDADO("Hospedado"),
     FINALIZADA("Finalizada"),
@@ -16,7 +16,7 @@ public enum Estadoreserva {
 
     private final String texto;
 
-    Estadoreserva(String texto) {
+    EstadoReserva(String texto) {
         this.texto = texto;
     }
 
@@ -24,7 +24,7 @@ public enum Estadoreserva {
         return this == CONFIRMADA || this == HOSPEDADO;
     }
 
-    public boolean puedePasarA(Estadoreserva destino) {
+    public boolean puedePasarA(EstadoReserva destino) {
         return switch (this) {
             case CONFIRMADA -> destino == HOSPEDADO || destino == VENCIDA;
             case HOSPEDADO -> destino == FINALIZADA;
