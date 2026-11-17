@@ -15,9 +15,9 @@ public class PanelCheck extends javax.swing.JPanel implements Refrescable {
     public PanelCheck() {
         initComponents();
         TablaReservas.configurar(tblReservas);
-        tblReservas.getSelectionModel().addListSelectionListener(e -> {
+        tblReservas.getSelectionModel().addListSelectionListener(evento -> {
             int fila = tblReservas.getSelectedRow();
-            if (!e.getValueIsAdjusting() && fila >= 0) {
+            if (!evento.getValueIsAdjusting() && fila >= 0) {
                 txtCodigo.setText(String.valueOf(tblReservas.getValueAt(fila, TablaReservas.COL_CODIGO)));
                 buscar();
             }
@@ -308,12 +308,12 @@ public class PanelCheck extends javax.swing.JPanel implements Refrescable {
 
     private void btnProcesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcesarActionPerformed
         try {
-            Reserva r = rdoCheckIn.isSelected() ? controlador.realizarCheckIn(txtCodigo.getText())
+            Reserva reserva = rdoCheckIn.isSelected() ? controlador.realizarCheckIn(txtCodigo.getText())
                     : controlador.realizarCheckOut(txtCodigo.getText());
-            mostrar(r);
+            mostrar(reserva);
             refrescar();
             Dialogos.info(this, (rdoCheckIn.isSelected() ? "Check-in" : "Check-out") + " realizado. Reserva "
-                    + r.getCodigo() + " ahora está " + r.getEstado() + ".");
+                    + reserva.getCodigo() + " ahora está " + reserva.getEstado() + ".");
         } catch (HotelException ex) {
             Dialogos.error(this, ex.getMessage());
         }
@@ -328,15 +328,15 @@ public class PanelCheck extends javax.swing.JPanel implements Refrescable {
         }
     }
 
-    private void mostrar(Reserva r) {
-        txtHuesped.setText(r == null ? "" : r.getHuesped().getNombreCompleto());
-        txtHabitacion.setText(r == null ? "" : r.getHabitacion().toString());
-        txtEntrada.setText(r == null ? "" : Estilo.fecha(r.getFechaEntrada()));
-        txtSalida.setText(r == null ? "" : Estilo.fecha(r.getFechaSalida()));
-        txtSalidaReal.setText(r == null ? "" : Estilo.fecha(r.getFechaSalidaReal()));
-        txtEstado.setText(r == null ? "" : r.getEstado().toString());
-        if (r != null) {
-            (r.getEstado() == EstadoReserva.HOSPEDADO ? rdoCheckOut : rdoCheckIn).setSelected(true);
+    private void mostrar(Reserva reserva) {
+        txtHuesped.setText(reserva == null ? "" : reserva.getHuesped().getNombreCompleto());
+        txtHabitacion.setText(reserva == null ? "" : reserva.getHabitacion().toString());
+        txtEntrada.setText(reserva == null ? "" : Estilo.fecha(reserva.getFechaEntrada()));
+        txtSalida.setText(reserva == null ? "" : Estilo.fecha(reserva.getFechaSalida()));
+        txtSalidaReal.setText(reserva == null ? "" : Estilo.fecha(reserva.getFechaSalidaReal()));
+        txtEstado.setText(reserva == null ? "" : reserva.getEstado().toString());
+        if (reserva != null) {
+            (reserva.getEstado() == EstadoReserva.HOSPEDADO ? rdoCheckOut : rdoCheckIn).setSelected(true);
         }
     }
 

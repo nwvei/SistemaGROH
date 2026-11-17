@@ -202,7 +202,7 @@ public class PanelHuespedes extends javax.swing.JPanel implements Refrescable {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         try {
-            controlador.registrarHuesped(txtId.getText(), txtNombre.getText(), txtTelefono.getText(),
+            controlador.agregarHuesped(txtId.getText(), txtNombre.getText(), txtTelefono.getText(),
                     txtCorreo.getText());
             limpiar();
             refrescar();
@@ -226,10 +226,10 @@ public class PanelHuespedes extends javax.swing.JPanel implements Refrescable {
 
     @Override
     public void refrescar() {
-        DefaultTableModel m = (DefaultTableModel) tblHuespedes.getModel();
-        m.setRowCount(0);
-        for (Huesped h : controlador.listarHuespedes()) {
-            m.addRow(new Object[]{h.getIdentificacion(), h.getNombreCompleto(), h.getTelefono(), h.getCorreo()});
+        DefaultTableModel modelo = (DefaultTableModel) tblHuespedes.getModel();
+        modelo.setRowCount(0);
+        for (Huesped huesped : controlador.listarHuespedes()) {
+            modelo.addRow(new Object[]{huesped.getIdentificacion(), huesped.getNombreCompleto(), huesped.getTelefono(), huesped.getCorreo()});
         }
     }
 

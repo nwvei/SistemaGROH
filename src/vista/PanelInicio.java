@@ -342,7 +342,7 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
 
     private void btnDemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDemoActionPerformed
         try {
-            controlador.cargarDatosDeEjemplo();
+            controlador.cargarDatosDePrueba();
             refrescar();
             Dialogos.info(this, "Datos de ejemplo cargados: 4 huéspedes, 8 habitaciones y 5 reservas.\n"
                     + "Incluyen una reserva ya vencida para probar la supervisión.");
@@ -365,13 +365,13 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         procesos.detener();
     }
 
-    void mostrar(Indicadores i) {
-        lblValTotal.setText(String.valueOf(i.totalHabitaciones()));
-        lblValOcupadas.setText(String.valueOf(i.ocupadas()));
-        lblValNoOcupadas.setText(String.valueOf(i.noOcupadas()));
-        lblValConfirmadas.setText(String.valueOf(i.confirmadas()));
-        lblValVencidas.setText(String.valueOf(i.vencidas()));
-        lblValIngresos.setText(Estilo.colones(i.ingresosEsperados()));
+    void mostrar(Indicadores indicadores) {
+        lblValTotal.setText(String.valueOf(indicadores.getTotalHabitaciones()));
+        lblValOcupadas.setText(String.valueOf(indicadores.getOcupadas()));
+        lblValNoOcupadas.setText(String.valueOf(indicadores.getNoOcupadas()));
+        lblValConfirmadas.setText(String.valueOf(indicadores.getConfirmadas()));
+        lblValVencidas.setText(String.valueOf(indicadores.getVencidas()));
+        lblValIngresos.setText(Estilo.colones(indicadores.getIngresosEsperados()));
     }
 
     @Override

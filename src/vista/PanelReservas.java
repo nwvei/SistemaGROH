@@ -328,11 +328,11 @@ public class PanelReservas extends javax.swing.JPanel implements Refrescable {
         Huesped huesped = (Huesped) cmbHuesped.getSelectedItem();
         Habitacion habitacion = (Habitacion) cmbHabitacion.getSelectedItem();
         try {
-            Reserva r = controlador.registrarReserva(huesped == null ? null : huesped.getIdentificacion(),
+            Reserva reserva = controlador.agregarReserva(huesped == null ? null : huesped.getIdentificacion(),
                     habitacion == null ? null : habitacion.getNumero(), txtPersonas.getText(),
                     Estilo.leerFecha(spnEntrada), Estilo.leerFecha(spnSalida));
-            Dialogos.info(this, "Reserva " + r.getCodigo() + " registrada.\nNoches: " + r.getNoches()
-                    + "   Importe: " + Estilo.colones(r.getImporteTotal()));
+            Dialogos.info(this, "Reserva " + reserva.getCodigo() + " registrada.\nNoches: " + reserva.getNoches()
+                    + "   Importe: " + Estilo.colones(reserva.getImporteTotal()));
             txtPersonas.setText("");
             refrescar();
         } catch (HotelException ex) {

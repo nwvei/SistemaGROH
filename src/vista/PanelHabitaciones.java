@@ -216,7 +216,7 @@ public class PanelHabitaciones extends javax.swing.JPanel implements Refrescable
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         try {
-            controlador.registrarHabitacion(txtNumero.getText(), (TipoHabitacion) cmbTipo.getSelectedItem());
+            controlador.agregarHabitacion(txtNumero.getText(), (TipoHabitacion) cmbTipo.getSelectedItem());
             limpiar();
             refrescar();
             Dialogos.info(this, "Habitación registrada correctamente.");
@@ -247,11 +247,11 @@ public class PanelHabitaciones extends javax.swing.JPanel implements Refrescable
 
     @Override
     public void refrescar() {
-        DefaultTableModel m = (DefaultTableModel) tblHabitaciones.getModel();
-        m.setRowCount(0);
-        for (Habitacion h : controlador.listarHabitaciones()) {
-            m.addRow(new Object[]{h.getNumero(), h.getTipo(), h.getCapacidad(),
-                Estilo.colones(h.getTarifaPorNoche())});
+        DefaultTableModel modelo = (DefaultTableModel) tblHabitaciones.getModel();
+        modelo.setRowCount(0);
+        for (Habitacion habitacion : controlador.listarHabitaciones()) {
+            modelo.addRow(new Object[]{habitacion.getNumero(), habitacion.getTipo(), habitacion.getCapacidad(),
+                Estilo.colones(habitacion.getTarifaPorNoche())});
         }
     }
 

@@ -8,7 +8,6 @@ import Excepciones.HotelException;
 import controlador.ControladorHotel;
 import controlador.ResultadoDisponibilidad;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import modelo.Habitacion;
 
@@ -152,16 +151,25 @@ public class PanelDisponibilidad extends javax.swing.JPanel implements Refrescab
 
     private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
         try {
-            ResultadoDisponibilidad r = controlador.consultarDisponibilidad(Estilo.leerFecha(spnFecha));
-            lblTotal.setText("Habitaciones disponibles el " + Estilo.fecha(r.fecha()) + ": " + r.total());
-            lblNumeros.setText(r.habitaciones().isEmpty() ? "Sin habitaciones disponibles."
-                    : "Habitaciones: " + r.habitaciones().stream().map(Habitacion::getNumero)
-                            .collect(Collectors.joining(", ")));
-            DefaultTableModel m = (DefaultTableModel) tblDisponibles.getModel();
-            m.setRowCount(0);
-            for (Habitacion h : r.habitaciones()) {
-                m.addRow(new Object[]{h.getNumero(), h.getTipo(), h.getCapacidad(),
-                    Estilo.colones(h.getTarifaPorNoche())});
+            ResultadoDisponibilidad resultado = controlador.buscarDisponibilidad(Estilo.leerFecha(spnFecha));
+            lblTotal.setText("Habitaciones disponibles el " + Estilo.fecha(resultado.getFecha()) + ": " + resultado.getTotal());
+            if (resultado.getHabitaciones().isEmpty()) {
+                lblNumeros.setText("Sin habitaciones disponibles.");
+            } else {
+                String numeros = "";
+                for (Habitacion habitacion : resultado.getHabitaciones()) {
+                    if (!numeros.isEmpty()) {
+                        numeros += ", ";
+                    }
+                    numeros += habitacion.getNumero();
+                }
+                lblNumeros.setText("Habitaciones: " + numeros);
+            }
+            DefaultTableModel modelo = (DefaultTableModel) tblDisponibles.getModel();
+            modelo.setRowCount(0);
+            for (Habitacion habitacion : resultado.getHabitaciones()) {
+                modelo.addRow(new Object[]{habitacion.getNumero(), habitacion.getTipo(), habitacion.getCapacidad(),
+                    Estilo.colones(habitacion.getTarifaPorNoche())});
             }
         } catch (HotelException ex) {
             Dialogos.error(this, ex.getMessage());

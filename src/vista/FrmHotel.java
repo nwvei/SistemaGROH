@@ -160,8 +160,9 @@ public class FrmHotel extends javax.swing.JFrame {
 
     private void tabsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabsStateChanged
 
-        if (tabs.getSelectedComponent() instanceof Refrescable r) {
-            r.refrescar();
+        java.awt.Component panel = tabs.getSelectedComponent();
+        if (panel instanceof Refrescable) {
+            ((Refrescable) panel).refrescar();
         }
     }//GEN-LAST:event_tabsStateChanged
 

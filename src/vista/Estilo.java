@@ -57,9 +57,11 @@ final class Estilo {
     }
 
     static LocalDate leerFecha(JSpinner selector) {
-        if (!(selector.getValue() instanceof Date valor)) {
+        Object contenido = selector.getValue();
+        if (!(contenido instanceof Date)) {
             return null;
         }
+        Date valor = (Date) contenido;
         return valor.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
@@ -67,8 +69,8 @@ final class Estilo {
         selector.setValue(aDate(fecha));
     }
 
-    private static Date aDate(LocalDate f) {
-        return Date.from(f.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    private static Date aDate(LocalDate fecha) {
+        return Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     static void estilizarTabla(JTable tabla) {
@@ -80,55 +82,55 @@ final class Estilo {
         tabla.setShowVerticalLines(false);
         tabla.setFillsViewportHeight(true);
         tabla.setAutoCreateRowSorter(true);
-        JTableHeader h = tabla.getTableHeader();
-        h.setFont(FUENTE_NEGRITA);
-        h.setBackground(AZUL);
-        h.setForeground(Color.WHITE);
-        h.setReorderingAllowed(false);
-        h.setPreferredSize(new Dimension(h.getPreferredSize().width, 32));
+        JTableHeader encabezado = tabla.getTableHeader();
+        encabezado.setFont(FUENTE_NEGRITA);
+        encabezado.setBackground(AZUL);
+        encabezado.setForeground(Color.WHITE);
+        encabezado.setReorderingAllowed(false);
+        encabezado.setPreferredSize(new Dimension(encabezado.getPreferredSize().width, 32));
         DefaultTableCellRenderer cabecera = new DefaultTableCellRenderer();
         cabecera.setHorizontalAlignment(SwingConstants.LEFT);
         cabecera.setBackground(AZUL);
         cabecera.setForeground(Color.WHITE);
         cabecera.setFont(FUENTE_NEGRITA);
         cabecera.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-        h.setDefaultRenderer(cabecera);
+        encabezado.setDefaultRenderer(cabecera);
     }
 
     static void renderizarEstado(JTable tabla, int columna) {
         tabla.getColumnModel().getColumn(columna).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
-            public Component getTableCellRendererComponent(JTable t, Object valor, boolean sel,
+            public Component getTableCellRendererComponent(JTable tablaCelda, Object valor, boolean seleccionada,
                     boolean foco, int fila, int col) {
-                JLabel l = (JLabel) super.getTableCellRendererComponent(t, valor, sel, foco, fila, col);
-                l.setHorizontalAlignment(SwingConstants.CENTER);
-                String s = String.valueOf(valor);
+                JLabel etiqueta = (JLabel) super.getTableCellRendererComponent(tablaCelda, valor, seleccionada, foco, fila, col);
+                etiqueta.setHorizontalAlignment(SwingConstants.CENTER);
+                String texto = String.valueOf(valor);
                 Color fondo = Color.WHITE;
                 Color letra = TEXTO;
-                if (s.equals(EstadoReserva.CONFIRMADA.toString())) {
+                if (texto.equals(EstadoReserva.CONFIRMADA.toString())) {
                     fondo = AZUL_CLARO;
                     letra = AZUL;
-                } else if (s.equals(EstadoReserva.HOSPEDADO.toString())) {
+                } else if (texto.equals(EstadoReserva.HOSPEDADO.toString())) {
                     fondo = VERDE_CLARO;
                     letra = VERDE;
-                } else if (s.equals(EstadoReserva.VENCIDA.toString())) {
+                } else if (texto.equals(EstadoReserva.VENCIDA.toString())) {
                     fondo = ROJO_CLARO;
                     letra = ROJO;
-                } else if (s.equals(EstadoReserva.FINALIZADA.toString())) {
+                } else if (texto.equals(EstadoReserva.FINALIZADA.toString())) {
                     fondo = new Color(232, 234, 238);
                     letra = GRIS;
                 }
-                l.setBackground(fondo);
-                l.setForeground(letra);
-                l.setFont(FUENTE_NEGRITA);
-                return l;
+                etiqueta.setBackground(fondo);
+                etiqueta.setForeground(letra);
+                etiqueta.setFont(FUENTE_NEGRITA);
+                return etiqueta;
             }
         });
     }
 
     static void alinearDerecha(JTable tabla, int columna) {
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(SwingConstants.RIGHT);
-        tabla.getColumnModel().getColumn(columna).setCellRenderer(r);
+        DefaultTableCellRenderer renderizador = new DefaultTableCellRenderer();
+        renderizador.setHorizontalAlignment(SwingConstants.RIGHT);
+        tabla.getColumnModel().getColumn(columna).setCellRenderer(renderizador);
     }
 }

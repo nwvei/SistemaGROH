@@ -153,12 +153,12 @@ public class PanelSimulacion extends javax.swing.JPanel implements Refrescable {
         try {
             LocalDate referencia = Estilo.leerFecha(spnFecha);
             List<Reserva> resultado = controlador.simularVencimientos(referencia);
-            DefaultTableModel m = (DefaultTableModel) tblSimulacion.getModel();
-            m.setRowCount(0);
-            for (Reserva r : resultado) {
-                m.addRow(new Object[]{r.getCodigo(), r.getHuesped().getNombreCompleto(),
-                    r.getHabitacion().getNumero(), Estilo.fecha(r.getFechaEntrada()), r.getEstado().toString(),
-                    r.getEstado() == EstadoReserva.CONFIRMADA ? "Vencería" : "Ya vencida"});
+            DefaultTableModel modelo = (DefaultTableModel) tblSimulacion.getModel();
+            modelo.setRowCount(0);
+            for (Reserva reserva : resultado) {
+                modelo.addRow(new Object[]{reserva.getCodigo(), reserva.getHuesped().getNombreCompleto(),
+                    reserva.getHabitacion().getNumero(), Estilo.fecha(reserva.getFechaEntrada()), reserva.getEstado().toString(),
+                    reserva.getEstado() == EstadoReserva.CONFIRMADA ? "Vencería" : "Ya vencida"});
             }
             lblResumen.setText(resultado.isEmpty()
                     ? "Ninguna reserva estaría vencida el " + Estilo.fecha(referencia) + "."

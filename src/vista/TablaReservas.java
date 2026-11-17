@@ -25,14 +25,14 @@ final class TablaReservas {
     }
 
     static void llenar(JTable tabla, List<Reserva> reservas) {
-        DefaultTableModel m = (DefaultTableModel) tabla.getModel();
-        m.setRowCount(0);
-        for (Reserva r : reservas) {
-            m.addRow(new Object[]{r.getCodigo(), r.getHuesped().getNombreCompleto(),
-                r.getHabitacion().getNumero(), r.getPersonas(), Estilo.fecha(r.getFechaEntrada()),
-                Estilo.fecha(r.getFechaSalida()), Estilo.fecha(r.getFechaSalidaReal()), r.getNoches(),
-                Estilo.colones(r.getImporteTotal()), r.getEstado().toString(),
-                r.getRecepcionista().getUsuario()});
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0);
+        for (Reserva reserva : reservas) {
+            modelo.addRow(new Object[]{reserva.getCodigo(), reserva.getHuesped().getNombreCompleto(),
+                reserva.getHabitacion().getNumero(), reserva.getPersonas(), Estilo.fecha(reserva.getFechaEntrada()),
+                Estilo.fecha(reserva.getFechaSalida()), Estilo.fecha(reserva.getFechaSalidaReal()), reserva.getNoches(),
+                Estilo.colones(reserva.getImporteTotal()), reserva.getEstado().toString(),
+                reserva.getRecepcionista().getUsuario()});
         }
     }
 }
