@@ -34,12 +34,12 @@ public class ActualizadorIndicadores implements Runnable {
         String nombre = Thread.currentThread().getName();
         publicar(nombre + ": Inicio ejecución (" + CICLOS + " ciclos).");
         for (int ciclo = 1; ciclo <= CICLOS; ciclo++) {
-            Indicadores ind = gestor.calcularIndicadores();
+            Indicadores indicadores = gestor.calcularIndicadores();
             publicar(nombre + ": Ciclo " + ciclo + " de " + CICLOS + " - indicadores actualizados ("
-                    + "confirmadas=" + ind.confirmadas() + ", vencidas=" + ind.vencidas()
-                    + ", ocupadas=" + ind.ocupadas() + ", ingresos=" + ind.ingresosEsperados() + ").");
+                    + "confirmadas=" + indicadores.getConfirmadas() + ", vencidas=" + indicadores.getVencidas()
+                    + ", ocupadas=" + indicadores.getOcupadas() + ", ingresos=" + indicadores.getIngresosEsperados() + ").");
             if (alCalcular != null) {
-                alCalcular.accept(ind);
+                alCalcular.accept(indicadores);
             }
             if (ciclo < CICLOS) {
                 try {

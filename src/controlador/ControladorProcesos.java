@@ -7,29 +7,33 @@ package controlador;
 import Excepciones.SesionException;
 import Hilos.ActualizadorIndicadores;
 import Hilos.SupervisorReservas;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 import modelo.GestorHotel;
 import modelo.Indicadores;
 
 public class ControladorProcesos {
-    private final AtomicBoolean enEjecucion = new AtomicBoolean(false);
-    private volatile Thread hiloSupervisor;
-    private volatile Thread hiloActualizador;
-    private volatile Thread hiloCoordinador;
+    private boolean enEjecucion = false;
+    private Thread hiloSupervisor;
+    private Thread hiloActualizador;
+    private Thread hiloCoordinador;
 
-    public boolean estaEnEjecucion() {
-        return enEjecucion.get();
+    public synchronized boolean estaEnEjecucion() {
+        return enEjecucion;
     }
 
-    public void iniciar(Consumer<String> alMensaje, Consumer<Indicadores> alIndicadores,
+    private synchronized void terminarEjecucion() {
+        enEjecucion = false;
+    }
+
+    public synchronized void iniciar(Consumer<String> alMensaje, Consumer<Indicadores> alIndicadores,
             Runnable alTerminar) throws SesionException {
-        if (!enEjecucion.compareAndSet(false, true)) {
+        if (enEjecucion) {
             throw new SesionException("Los procesos de supervisión ya están en ejecución.");
         }
-        Consumer<String> mensajeEdt = m -> SwingUtilities.invokeLater(() -> alMensaje.accept(m));
-        Consumer<Indicadores> indicadoresEdt = i -> SwingUtilities.invokeLater(() -> alIndicadores.accept(i));
+        enEjecucion = true;
+        Consumer<String> mensajeEdt = mensaje -> SwingUtilities.invokeLater(() -> alMensaje.accept(mensaje));
+        Consumer<Indicadores> indicadoresEdt = indicadores -> SwingUtilities.invokeLater(() -> alIndicadores.accept(indicadores));
 
         Thread supervisor = new Thread(new SupervisorReservas(mensajeEdt), "SupervisorReservas");
         Thread actualizador = new Thread(new ActualizadorIndicadores(mensajeEdt, indicadoresEdt),
@@ -59,15 +63,15 @@ public class ControladorProcesos {
             System.out.println("CoordinadorProcesos: ambos hilos terminaron; indicadores finales calculados.");
             mensajeEdt.accept("Procesos finalizados. Indicadores finales actualizados.");
             indicadoresEdt.accept(finales);
-            enEjecucion.set(false);
+            terminarEjecucion();
             SwingUtilities.invokeLater(alTerminar);
         }
     }
 
     public void detener() {
-        for (Thread t : new Thread[]{hiloSupervisor, hiloActualizador, hiloCoordinador}) {
-            if (t != null) {
-                t.interrupt();
+        for (Thread hilo : new Thread[]{hiloSupervisor, hiloActualizador, hiloCoordinador}) {
+            if (hilo != null) {
+                hilo.interrupt();
             }
         }
     }
