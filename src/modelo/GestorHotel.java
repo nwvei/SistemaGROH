@@ -26,9 +26,7 @@ public final class GestorHotel {
 
     private static final GestorHotel INSTANCIA = new GestorHotel();
 
-    private final List<Recepcionista> recepcionistas = List.of(
-            new Recepcionista("recepcion1", "Hotel123"),
-            new Recepcionista("recepcion2", "Hotel456"));
+    private final List<Recepcionista> recepcionistas = new ArrayList<>();
 
     private final Map<String, Huesped> huespedes = new LinkedHashMap<>();
     private final Map<String, Habitacion> habitaciones = new LinkedHashMap<>();
@@ -38,6 +36,8 @@ public final class GestorHotel {
     private int consecutivoReservas = 0;
 
     private GestorHotel() {
+        recepcionistas.add(new Recepcionista("recepcion1", "Hotel123"));
+        recepcionistas.add(new Recepcionista("recepcion2", "Hotel456"));
     }
 
     public static GestorHotel getInstancia() {
@@ -53,10 +53,10 @@ public final class GestorHotel {
         if (esVacio(usuario) || contrasena == null || contrasena.isEmpty()) {
             throw new CredencialesInvalidasException("Ingrese el usuario y la contraseña.");
         }
-        for (Recepcionista r : recepcionistas) {
-            if (r.validar(usuario.trim(), contrasena)) {
-                activo = r;
-                return r;
+        for (Recepcionista recepcionista : recepcionistas) {
+            if (recepcionista.validar(usuario.trim(), contrasena)) {
+                activo = recepcionista;
+                return recepcionista;
             }
         }
         throw new CredencialesInvalidasException("Usuario o contraseña incorrectos.");
@@ -70,7 +70,7 @@ public final class GestorHotel {
         return activo;
     }
 
-    public synchronized Huesped registrarHuesped(String identificacion, String nombre,
+    public synchronized Huesped agregarHuesped(String identificacion, String nombre,
             String telefono, String correo) throws HotelException {
         if (esVacio(identificacion) || esVacio(nombre) || esVacio(telefono) || esVacio(correo)) {
             throw new DatosInvalidosException("Todos los campos del huésped son obligatorios.");
@@ -87,9 +87,9 @@ public final class GestorHotel {
             throw new RegistroDuplicadoException(
                     "Ya existe un huésped con la identificación " + identificacion + ".");
         }
-        Huesped h = new Huesped(identificacion, nombre, telefono, correo);
-        huespedes.put(identificacion, h);
-        return h;
+        Huesped huesped = new Huesped(identificacion, nombre, telefono, correo);
+        huespedes.put(identificacion, huesped);
+        return huesped;
     }
 
     public synchronized List<Huesped> listarHuespedes() {
@@ -106,7 +106,7 @@ public final class GestorHotel {
         return punto > 0 && !dominio.endsWith(".") && !correo.contains(" ");
     }
 
-    public synchronized Habitacion registrarHabitacion(String numero, TipoHabitacion tipo)
+    public synchronized Habitacion agregarHabitacion(String numero, TipoHabitacion tipo)
             throws HotelException {
         if (esVacio(numero)) {
             throw new DatosInvalidosException("El número de habitación es obligatorio.");
@@ -118,9 +118,9 @@ public final class GestorHotel {
         if (habitaciones.containsKey(numero)) {
             throw new RegistroDuplicadoException("La habitación " + numero + " ya existe.");
         }
-        Habitacion h = HabitacionFactory.crear(numero, tipo);
-        habitaciones.put(numero, h);
-        return h;
+        Habitacion habitacion = HabitacionFactory.crear(numero, tipo);
+        habitaciones.put(numero, habitacion);
+        return habitacion;
     }
 
     public synchronized List<Habitacion> listarHabitaciones() {
@@ -131,7 +131,7 @@ public final class GestorHotel {
         return String.format("R%04d", consecutivoReservas + 1);
     }
 
-    public synchronized Reserva registrarReserva(String idHuesped, String numeroHabitacion,
+    public synchronized Reserva agregarReserva(String idHuesped, String numeroHabitacion,
             int personas, LocalDate entrada, LocalDate salida, LocalDate hoy) throws HotelException {
         if (activo == null) {
             throw new SesionException("Debe iniciar sesión para registrar reservas.");
@@ -165,15 +165,15 @@ public final class GestorHotel {
                     + " ya tiene una reserva Confirmada u Hospedado que se superpone con ese período.");
         }
         consecutivoReservas++;
-        Reserva r = new Reserva(String.format("R%04d", consecutivoReservas), huesped, habitacion,
+        Reserva reserva = new Reserva(String.format("R%04d", consecutivoReservas), huesped, habitacion,
                 personas, entrada, salida, activo);
-        reservas.add(r);
-        return r;
+        reservas.add(reserva);
+        return reserva;
     }
 
-    public synchronized Reserva registrarReserva(String idHuesped, String numeroHabitacion,
+    public synchronized Reserva agregarReserva(String idHuesped, String numeroHabitacion,
             int personas, LocalDate entrada, LocalDate salida) throws HotelException {
-        return registrarReserva(idHuesped, numeroHabitacion, personas, entrada, salida, LocalDate.now());
+        return agregarReserva(idHuesped, numeroHabitacion, personas, entrada, salida, LocalDate.now());
     }
 
     public synchronized List<Reserva> listarReservas() {
@@ -184,19 +184,19 @@ public final class GestorHotel {
         if (esVacio(codigo)) {
             throw new DatosInvalidosException("Ingrese el código de la reserva.");
         }
-        for (Reserva r : reservas) {
-            if (r.getCodigo().equalsIgnoreCase(codigo.trim())) {
-                return r;
+        for (Reserva reserva : reservas) {
+            if (reserva.getCodigo().equalsIgnoreCase(codigo.trim())) {
+                return reserva;
             }
         }
         throw new NoEncontradoException("No existe la reserva " + codigo.trim() + ".");
     }
 
-    public synchronized List<Habitacion> consultarDisponibles(LocalDate fecha) {
+    public synchronized List<Habitacion> buscarHabitacionesDisponibles(LocalDate fecha) {
         List<Habitacion> libres = new ArrayList<>();
-        for (Habitacion h : habitaciones.values()) {
-            if (Recursividad.estaDisponibleEnFecha(h, reservas, fecha)) {
-                libres.add(h);
+        for (Habitacion habitacion : habitaciones.values()) {
+            if (Recursividad.estaDisponibleEnFecha(habitacion, reservas, fecha)) {
+                libres.add(habitacion);
             }
         }
         return libres;
@@ -208,17 +208,17 @@ public final class GestorHotel {
     }
 
     public synchronized Reserva realizarCheckIn(String codigo, LocalDate hoy) throws HotelException {
-        Reserva r = buscarReserva(codigo);
-        if (r.getEstado() != EstadoReserva.CONFIRMADA) {
+        Reserva reserva = buscarReserva(codigo);
+        if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
             throw new TransicionNoPermitidaException("No se puede hacer check-in: la reserva está "
-                    + r.getEstado() + ".");
+                    + reserva.getEstado() + ".");
         }
-        if (!hoy.equals(r.getFechaEntrada())) {
+        if (!hoy.equals(reserva.getFechaEntrada())) {
             throw new DatosInvalidosException("El check-in solo se permite en la fecha de entrada ("
-                    + r.getFechaEntrada() + ").");
+                    + reserva.getFechaEntrada() + ").");
         }
-        r.cambiarEstado(EstadoReserva.HOSPEDADO);
-        return r;
+        reserva.cambiarEstado(EstadoReserva.HOSPEDADO);
+        return reserva;
     }
 
     public synchronized Reserva realizarCheckIn(String codigo) throws HotelException {
@@ -226,14 +226,14 @@ public final class GestorHotel {
     }
 
     public synchronized Reserva realizarCheckOut(String codigo, LocalDate hoy) throws HotelException {
-        Reserva r = buscarReserva(codigo);
-        if (r.getEstado() != EstadoReserva.HOSPEDADO) {
+        Reserva reserva = buscarReserva(codigo);
+        if (reserva.getEstado() != EstadoReserva.HOSPEDADO) {
             throw new TransicionNoPermitidaException("No se puede hacer check-out: la reserva está "
-                    + r.getEstado() + ".");
+                    + reserva.getEstado() + ".");
         }
-        r.cambiarEstado(EstadoReserva.FINALIZADA);
-        r.registrarSalidaReal(hoy);
-        return r;
+        reserva.cambiarEstado(EstadoReserva.FINALIZADA);
+        reserva.registrarSalidaReal(hoy);
+        return reserva;
     }
 
     public synchronized Reserva realizarCheckOut(String codigo) throws HotelException {
@@ -242,10 +242,10 @@ public final class GestorHotel {
 
     public synchronized int actualizarReservasVencidas(LocalDate hoy) {
         int cambiadas = 0;
-        for (Reserva r : reservas) {
-            if (r.getEstado() == EstadoReserva.CONFIRMADA && r.getFechaEntrada().isBefore(hoy)) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA && reserva.getFechaEntrada().isBefore(hoy)) {
                 try {
-                    r.cambiarEstado(EstadoReserva.VENCIDA);
+                    reserva.cambiarEstado(EstadoReserva.VENCIDA);
                     cambiadas++;
                 } catch (TransicionNoPermitidaException ex) {
                     throw new IllegalStateException(ex); // Confirmada→Vencida siempre es válida
@@ -257,12 +257,12 @@ public final class GestorHotel {
 
     public synchronized List<Reserva> simularVencidas(LocalDate fechaReferencia) {
         List<Reserva> resultado = new ArrayList<>();
-        for (Reserva r : reservas) {
-            boolean yaVencida = r.getEstado() == EstadoReserva.VENCIDA;
-            boolean vencera = r.getEstado() == EstadoReserva.CONFIRMADA
-                    && r.getFechaEntrada().isBefore(fechaReferencia);
+        for (Reserva reserva : reservas) {
+            boolean yaVencida = reserva.getEstado() == EstadoReserva.VENCIDA;
+            boolean vencera = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    && reserva.getFechaEntrada().isBefore(fechaReferencia);
             if (yaVencida || vencera) {
-                resultado.add(r);
+                resultado.add(reserva);
             }
         }
         return resultado;
@@ -271,17 +271,17 @@ public final class GestorHotel {
 
     public synchronized Indicadores calcularIndicadores() {
         int ocupadas = 0;
-        for (Habitacion h : habitaciones.values()) {
-            if (tieneHuespedAlojado(h)) {
+        for (Habitacion habitacion : habitaciones.values()) {
+            if (tieneHuespedAlojado(habitacion)) {
                 ocupadas++;
             }
         }
         int confirmadas = 0;
         int vencidas = 0;
-        for (Reserva r : reservas) {
-            if (r.getEstado() == EstadoReserva.CONFIRMADA) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
                 confirmadas++;
-            } else if (r.getEstado() == EstadoReserva.VENCIDA) {
+            } else if (reserva.getEstado() == EstadoReserva.VENCIDA) {
                 vencidas++;
             }
         }
@@ -290,10 +290,10 @@ public final class GestorHotel {
                 Recursividad.calcularIngresosEsperados(reservas));
     }
 
-    private boolean tieneHuespedAlojado(Habitacion h) {
-        for (Reserva r : reservas) {
-            if (r.getEstado() == EstadoReserva.HOSPEDADO
-                    && r.getHabitacion().getNumero().equals(h.getNumero())) {
+    private boolean tieneHuespedAlojado(Habitacion habitacion) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.HOSPEDADO
+                    && reserva.getHabitacion().getNumero().equals(habitacion.getNumero())) {
                 return true;
             }
         }
@@ -301,50 +301,50 @@ public final class GestorHotel {
     }
 
 
-    public synchronized void cargarDatosDemo(LocalDate hoy) throws HotelException {
+    public synchronized void cargarDatosDePrueba(LocalDate hoy) throws HotelException {
         if (!huespedes.isEmpty() || !habitaciones.isEmpty() || !reservas.isEmpty()) {
             throw new DatosInvalidosException("Los datos de ejemplo solo se cargan con el sistema vacío.");
         }
         if (activo == null) {
             throw new SesionException("Debe iniciar sesión.");
         }
-        registrarHuesped("118260123", "Ana Torres Jiménez", "8888-1122", "ana.torres@correo.com");
-        registrarHuesped("118260456", "Carlos Vega Mora", "8999-3344", "cvega@correo.com");
-        registrarHuesped("305550789", "Luis Soto Rojas", "7001-0099", "luis.soto@correo.com");
-        registrarHuesped("402220321", "Marta Ríos Campos", "6123-4455", "marta.rios@correo.com");
+        agregarHuesped("118260123", "Ana Torres Jiménez", "8888-1122", "ana.torres@correo.com");
+        agregarHuesped("118260456", "Carlos Vega Mora", "8999-3344", "cvega@correo.com");
+        agregarHuesped("305550789", "Luis Soto Rojas", "7001-0099", "luis.soto@correo.com");
+        agregarHuesped("402220321", "Marta Ríos Campos", "6123-4455", "marta.rios@correo.com");
         String[][] cuartos = {{"101", "D"}, {"102", "I"}, {"103", "F"}, {"104", "D"}, {"105", "I"},
             {"201", "D"}, {"202", "F"}, {"203", "I"}};
-        for (String[] c : cuartos) {
-            TipoHabitacion t = switch (c[1]) {
+        for (String[] cuarto : cuartos) {
+            TipoHabitacion tipo = switch (cuarto[1]) {
                 case "I" -> TipoHabitacion.INDIVIDUAL;
                 case "D" -> TipoHabitacion.DOBLE;
                 default -> TipoHabitacion.FAMILIAR;
             };
-            registrarHabitacion(c[0], t);
+            agregarHabitacion(cuarto[0], tipo);
         }
       
-        registrarReserva("118260123", "101", 2, hoy.plusDays(3), hoy.plusDays(5), hoy);
-        registrarReserva("118260456", "102", 1, hoy, hoy.plusDays(2), hoy);
-        agregarHistorica("305550789", "103", 3, hoy.minusDays(1), hoy.plusDays(2), EstadoReserva.HOSPEDADO, null);
-        agregarHistorica("402220321", "104", 2, hoy.minusDays(3), hoy.minusDays(1), EstadoReserva.CONFIRMADA, null);
-        agregarHistorica("118260123", "105", 1, hoy.minusDays(6), hoy.minusDays(4), EstadoReserva.HOSPEDADO,
+        agregarReserva("118260123", "101", 2, hoy.plusDays(3), hoy.plusDays(5), hoy);
+        agregarReserva("118260456", "102", 1, hoy, hoy.plusDays(2), hoy);
+        agregarReservaHistorica("305550789", "103", 3, hoy.minusDays(1), hoy.plusDays(2), EstadoReserva.HOSPEDADO, null);
+        agregarReservaHistorica("402220321", "104", 2, hoy.minusDays(3), hoy.minusDays(1), EstadoReserva.CONFIRMADA, null);
+        agregarReservaHistorica("118260123", "105", 1, hoy.minusDays(6), hoy.minusDays(4), EstadoReserva.HOSPEDADO,
                 hoy.minusDays(4));
     }
 
    
-    private void agregarHistorica(String idHuesped, String numero, int personas, LocalDate entrada,
+    private void agregarReservaHistorica(String idHuesped, String numero, int personas, LocalDate entrada,
             LocalDate salida, EstadoReserva destino, LocalDate salidaReal) throws HotelException {
         consecutivoReservas++;
-        Reserva r = new Reserva(String.format("R%04d", consecutivoReservas), huespedes.get(idHuesped),
+        Reserva reserva = new Reserva(String.format("R%04d", consecutivoReservas), huespedes.get(idHuesped),
                 habitaciones.get(numero), personas, entrada, salida, activo);
         if (destino == EstadoReserva.HOSPEDADO) {
-            r.cambiarEstado(EstadoReserva.HOSPEDADO);
+            reserva.cambiarEstado(EstadoReserva.HOSPEDADO);
             if (salidaReal != null) {
-                r.cambiarEstado(EstadoReserva.FINALIZADA);
-                r.registrarSalidaReal(salidaReal);
+                reserva.cambiarEstado(EstadoReserva.FINALIZADA);
+                reserva.registrarSalidaReal(salidaReal);
             }
         }
-        reservas.add(r);
+        reservas.add(reserva);
     }
 
     private static boolean esVacio(String texto) {
