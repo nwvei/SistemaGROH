@@ -5,8 +5,8 @@
 package controlador;
 
 import Excepciones.SesionException;
-import hilos.ActualizadorIndicadores;
-import hilos.SupervisorReservas;
+import Hilos.ActualizadorIndicadores;
+import Hilos.SupervisorReservas;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
