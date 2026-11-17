@@ -24,8 +24,8 @@ public final class Reserva {
     private final long importeTotal;
     private final Recepcionista recepcionista;
 
-    private volatile LocalDate fechaSalidaReal;
-    private volatile EstadoReserva estado;
+    private LocalDate fechaSalidaReal;
+    private EstadoReserva estado;
 
     Reserva(String codigo, Huesped huesped, Habitacion habitacion, int personas,
             LocalDate fechaEntrada, LocalDate fechaSalida, Recepcionista recepcionista) {
