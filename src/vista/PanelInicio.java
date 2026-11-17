@@ -5,11 +5,13 @@
 package vista;
 
 import Excepciones.HotelException;
+import Hilos.Notificador;
 import controlador.ControladorHotel;
 import controlador.ControladorProcesos;
+import javax.swing.SwingUtilities;
 import modelo.Indicadores;
 
-public class PanelInicio extends javax.swing.JPanel implements Refrescable {
+public class PanelInicio extends javax.swing.JPanel implements Refrescable, Notificador {
     private final ControladorHotel controlador = new ControladorHotel();
     private final ControladorProcesos procesos = new ControladorProcesos();
 
@@ -333,7 +335,7 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
             txtLog.setText("");
             btnProcesos.setEnabled(false);
             lblEstado.setText("Procesos en ejecución…");
-            procesos.iniciar(this::agregarLog, this::mostrar, this::alTerminarProcesos);
+            procesos.iniciar(this);
         } catch (HotelException ex) {
             btnProcesos.setEnabled(false);
             Dialogos.error(this, ex.getMessage());
@@ -350,6 +352,36 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
             Dialogos.error(this, ex.getMessage());
         }
     }//GEN-LAST:event_btnDemoActionPerformed
+
+    @Override
+    public void mostrarMensaje(final String mensaje) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                agregarLog(mensaje);
+            }
+        });
+    }
+
+    @Override
+    public void mostrarIndicadores(final Indicadores indicadores) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                mostrar(indicadores);
+            }
+        });
+    }
+
+    @Override
+    public void procesosTerminados() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                alTerminarProcesos();
+            }
+        });
+    }
 
     private void alTerminarProcesos() {
         btnProcesos.setEnabled(true);

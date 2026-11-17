@@ -6,73 +6,48 @@ package controlador;
 
 import Excepciones.SesionException;
 import Hilos.ActualizadorIndicadores;
+import Hilos.CoordinadorProcesos;
+import Hilos.Notificador;
 import Hilos.SupervisorReservas;
-import java.util.function.Consumer;
-import javax.swing.SwingUtilities;
-import modelo.GestorHotel;
-import modelo.Indicadores;
 
 public class ControladorProcesos {
     private boolean enEjecucion = false;
-    private Thread hiloSupervisor;
-    private Thread hiloActualizador;
-    private Thread hiloCoordinador;
+    private SupervisorReservas supervisor;
+    private ActualizadorIndicadores actualizador;
 
     public synchronized boolean estaEnEjecucion() {
         return enEjecucion;
     }
 
-    private synchronized void terminarEjecucion() {
+    public synchronized void terminarEjecucion() {
         enEjecucion = false;
     }
 
-    public synchronized void iniciar(Consumer<String> alMensaje, Consumer<Indicadores> alIndicadores,
-            Runnable alTerminar) throws SesionException {
+    public synchronized void iniciar(Notificador notificador) throws SesionException {
         if (enEjecucion) {
             throw new SesionException("Los procesos de supervisión ya están en ejecución.");
         }
         enEjecucion = true;
-        Consumer<String> mensajeEdt = mensaje -> SwingUtilities.invokeLater(() -> alMensaje.accept(mensaje));
-        Consumer<Indicadores> indicadoresEdt = indicadores -> SwingUtilities.invokeLater(() -> alIndicadores.accept(indicadores));
+        supervisor = new SupervisorReservas(notificador);
+        actualizador = new ActualizadorIndicadores(notificador);
 
-        Thread supervisor = new Thread(new SupervisorReservas(mensajeEdt), "SupervisorReservas");
-        Thread actualizador = new Thread(new ActualizadorIndicadores(mensajeEdt, indicadoresEdt),
-                "ActualizadorIndicadores");
-        Thread coordinador = new Thread(() -> esperarYActualizar(supervisor, actualizador,
-                mensajeEdt, indicadoresEdt, alTerminar), "CoordinadorProcesos");
-        hiloSupervisor = supervisor;
-        hiloActualizador = actualizador;
-        hiloCoordinador = coordinador;
+        Thread hiloSupervisor = new Thread(supervisor, "SupervisorReservas");
+        Thread hiloActualizador = new Thread(actualizador, "ActualizadorIndicadores");
+        Thread hiloCoordinador = new Thread(
+                new CoordinadorProcesos(hiloSupervisor, hiloActualizador, notificador, this),
+                "CoordinadorProcesos");
 
-        supervisor.start();
-        actualizador.start();
-        coordinador.start();
+        hiloSupervisor.start();
+        hiloActualizador.start();
+        hiloCoordinador.start();
     }
 
-    private void esperarYActualizar(Thread supervisor, Thread actualizador,
-            Consumer<String> mensajeEdt, Consumer<Indicadores> indicadoresEdt, Runnable alTerminar) {
-        try {
-            supervisor.join();
-            actualizador.join();
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            supervisor.interrupt();
-            actualizador.interrupt();
-        } finally {
-            Indicadores finales = GestorHotel.getInstancia().calcularIndicadores();
-            System.out.println("CoordinadorProcesos: ambos hilos terminaron; indicadores finales calculados.");
-            mensajeEdt.accept("Procesos finalizados. Indicadores finales actualizados.");
-            indicadoresEdt.accept(finales);
-            terminarEjecucion();
-            SwingUtilities.invokeLater(alTerminar);
+    public synchronized void detener() {
+        if (supervisor != null) {
+            supervisor.detener();
         }
-    }
-
-    public void detener() {
-        for (Thread hilo : new Thread[]{hiloSupervisor, hiloActualizador, hiloCoordinador}) {
-            if (hilo != null) {
-                hilo.interrupt();
-            }
+        if (actualizador != null) {
+            actualizador.detener();
         }
     }
 }

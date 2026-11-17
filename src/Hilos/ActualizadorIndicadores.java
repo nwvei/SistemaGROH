@@ -4,9 +4,6 @@
  */
 package Hilos;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.function.Consumer;
 import modelo.GestorHotel;
 import modelo.Indicadores;
 
@@ -18,15 +15,21 @@ public class ActualizadorIndicadores implements Runnable {
 
     public static final int CICLOS = SupervisorReservas.CICLOS;
     public static final long PAUSA_MS = SupervisorReservas.PAUSA_MS;
-    private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private final GestorHotel gestor = GestorHotel.getInstancia();
-    private final Consumer<String> alMensaje;
-    private final Consumer<Indicadores> alCalcular;
+    private final Notificador notificador;
+    private boolean detenido = false;
 
-    public ActualizadorIndicadores(Consumer<String> alMensaje, Consumer<Indicadores> alCalcular) {
-        this.alMensaje = alMensaje;
-        this.alCalcular = alCalcular;
+    public ActualizadorIndicadores(Notificador notificador) {
+        this.notificador = notificador;
+    }
+
+    public synchronized void detener() {
+        detenido = true;
+    }
+
+    private synchronized boolean estaDetenido() {
+        return detenido;
     }
 
     @Override
@@ -34,18 +37,21 @@ public class ActualizadorIndicadores implements Runnable {
         String nombre = Thread.currentThread().getName();
         publicar(nombre + ": Inicio ejecución (" + CICLOS + " ciclos).");
         for (int ciclo = 1; ciclo <= CICLOS; ciclo++) {
+            if (estaDetenido()) {
+                publicar(nombre + ": Detenido en el ciclo " + ciclo + ". Finaliza anticipadamente.");
+                return;
+            }
             Indicadores indicadores = gestor.calcularIndicadores();
             publicar(nombre + ": Ciclo " + ciclo + " de " + CICLOS + " - indicadores actualizados ("
                     + "confirmadas=" + indicadores.getConfirmadas() + ", vencidas=" + indicadores.getVencidas()
                     + ", ocupadas=" + indicadores.getOcupadas() + ", ingresos=" + indicadores.getIngresosEsperados() + ").");
-            if (alCalcular != null) {
-                alCalcular.accept(indicadores);
+            if (notificador != null) {
+                notificador.mostrarIndicadores(indicadores);
             }
             if (ciclo < CICLOS) {
                 try {
                     Thread.sleep(PAUSA_MS);
                 } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
                     publicar(nombre + ": Interrumpido en el ciclo " + ciclo + ". Finaliza anticipadamente.");
                     return;
                 }
@@ -55,10 +61,10 @@ public class ActualizadorIndicadores implements Runnable {
     }
 
     private void publicar(String mensaje) {
-        String linea = "[" + LocalTime.now().format(HORA) + "] " + mensaje;
+        String linea = "[" + SupervisorReservas.horaActual() + "] " + mensaje;
         System.out.println(linea);
-        if (alMensaje != null) {
-            alMensaje.accept(linea);
+        if (notificador != null) {
+            notificador.mostrarMensaje(linea);
         }
     }
 }
