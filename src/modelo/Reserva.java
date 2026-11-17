@@ -6,7 +6,6 @@ package modelo;
 
 import Excepciones.TransicionNoPermitidaException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 /**
  *
@@ -42,7 +41,13 @@ public final class Reserva {
     }
 
     public static long calcularNoches(LocalDate entrada, LocalDate salida) {
-        return ChronoUnit.DAYS.between(entrada, salida);
+        long noches = 0;
+        LocalDate dia = entrada;
+        while (dia.isBefore(salida)) {
+            noches++;
+            dia = dia.plusDays(1);
+        }
+        return noches;
     }
 
     public String getCodigo() {

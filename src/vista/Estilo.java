@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
@@ -36,17 +35,35 @@ final class Estilo {
     static final Font FUENTE = new Font("Segoe UI", Font.PLAIN, 14);
     static final Font FUENTE_NEGRITA = new Font("Segoe UI", Font.BOLD, 14);
 
-    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
     private Estilo() {
     }
 
     static String colones(long monto) {
-        return "₡" + String.format("%,d", monto).replace(',', '.');
+        String digitos = String.valueOf(monto);
+        String resultado = "";
+        int contador = 0;
+        for (int i = digitos.length() - 1; i >= 0; i--) {
+            resultado = digitos.charAt(i) + resultado;
+            contador++;
+            if (contador % 3 == 0 && i > 0 && digitos.charAt(i - 1) != '-') {
+                resultado = "." + resultado;
+            }
+        }
+        return "₡" + resultado;
     }
 
     static String fecha(LocalDate fecha) {
-        return fecha == null ? "—" : fecha.format(FORMATO_FECHA);
+        if (fecha == null) {
+            return "—";
+        }
+        return dosDigitos(fecha.getDayOfMonth()) + "/" + dosDigitos(fecha.getMonthValue()) + "/" + fecha.getYear();
+    }
+
+    private static String dosDigitos(int numero) {
+        if (numero < 10) {
+            return "0" + numero;
+        }
+        return String.valueOf(numero);
     }
 
     static void prepararFecha(JSpinner selector, LocalDate inicial) {

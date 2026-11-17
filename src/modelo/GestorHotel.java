@@ -128,7 +128,7 @@ public final class GestorHotel {
     }
 
     public synchronized String proximoCodigo() {
-        return String.format("R%04d", consecutivoReservas + 1);
+        return formatearCodigo(consecutivoReservas + 1);
     }
 
     public synchronized Reserva agregarReserva(String idHuesped, String numeroHabitacion,
@@ -165,7 +165,7 @@ public final class GestorHotel {
                     + " ya tiene una reserva Confirmada u Hospedado que se superpone con ese período.");
         }
         consecutivoReservas++;
-        Reserva reserva = new Reserva(String.format("R%04d", consecutivoReservas), huesped, habitacion,
+        Reserva reserva = new Reserva(formatearCodigo(consecutivoReservas), huesped, habitacion,
                 personas, entrada, salida, activo);
         reservas.add(reserva);
         return reserva;
@@ -335,7 +335,7 @@ public final class GestorHotel {
     private void agregarReservaHistorica(String idHuesped, String numero, int personas, LocalDate entrada,
             LocalDate salida, EstadoReserva destino, LocalDate salidaReal) throws HotelException {
         consecutivoReservas++;
-        Reserva reserva = new Reserva(String.format("R%04d", consecutivoReservas), huespedes.get(idHuesped),
+        Reserva reserva = new Reserva(formatearCodigo(consecutivoReservas), huespedes.get(idHuesped),
                 habitaciones.get(numero), personas, entrada, salida, activo);
         if (destino == EstadoReserva.HOSPEDADO) {
             reserva.cambiarEstado(EstadoReserva.HOSPEDADO);
@@ -347,7 +347,15 @@ public final class GestorHotel {
         reservas.add(reserva);
     }
 
+    private static String formatearCodigo(int numero) {
+        String texto = String.valueOf(numero);
+        while (texto.length() < 4) {
+            texto = "0" + texto;
+        }
+        return "R" + texto;
+    }
+
     private static boolean esVacio(String texto) {
-        return texto == null || texto.isBlank();
+        return texto == null || texto.trim().isEmpty();
     }
 }
