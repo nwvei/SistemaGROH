@@ -6,7 +6,6 @@ package vista;
 
 import controlador.ControladorHotel;
 import controlador.ControladorSesion;
-import javax.swing.SwingUtilities;
 
 public class FrmHotel extends javax.swing.JFrame {
     private final ControladorSesion sesion = new ControladorSesion();
@@ -155,7 +154,7 @@ public class FrmHotel extends javax.swing.JFrame {
         pnlInicio.detenerProcesos();
         sesion.cerrarSesion();
         dispose();
-        SwingUtilities.invokeLater(() -> new FrmLogin().setVisible(true));
+        new FrmLogin().setVisible(true);
     }//GEN-LAST:event_btnCambiarUsuarioActionPerformed
 
     private void tabsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabsStateChanged

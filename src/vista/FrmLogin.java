@@ -6,7 +6,6 @@ package vista;
 
 import Excepciones.HotelException;
 import controlador.ControladorSesion;
-import javax.swing.SwingUtilities;
 
 public class FrmLogin extends javax.swing.JFrame {
     private final ControladorSesion controlador = new ControladorSesion();
@@ -171,7 +170,7 @@ public class FrmLogin extends javax.swing.JFrame {
             FrmHotel principal = new FrmHotel();
             dispose();
             principal.setVisible(true);
-            SwingUtilities.invokeLater(principal::revisarVencimientosAlIniciar);
+            principal.revisarVencimientosAlIniciar();
         } catch (HotelException ex) {
             lblError.setText(ex.getMessage());
             txtContrasena.setText("");

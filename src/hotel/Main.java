@@ -19,6 +19,11 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        SwingUtilities.invokeLater(() -> new FrmLogin().setVisible(true));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new FrmLogin().setVisible(true);
+            }
+        });
     }
 }
