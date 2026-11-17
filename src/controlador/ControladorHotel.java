@@ -24,17 +24,17 @@ public class ControladorHotel {
         return gestor.getRecepcionistaActivo();
     }
 
-    public Huesped registrarHuesped(String identificacion, String nombre, String telefono,
+    public Huesped agregarHuesped(String identificacion, String nombre, String telefono,
             String correo) throws HotelException {
-        return gestor.registrarHuesped(identificacion, nombre, telefono, correo);
+        return gestor.agregarHuesped(identificacion, nombre, telefono, correo);
     }
 
     public List<Huesped> listarHuespedes() {
         return gestor.listarHuespedes();
     }
 
-    public Habitacion registrarHabitacion(String numero, TipoHabitacion tipo) throws HotelException {
-        return gestor.registrarHabitacion(numero, tipo);
+    public Habitacion agregarHabitacion(String numero, TipoHabitacion tipo) throws HotelException {
+        return gestor.agregarHabitacion(numero, tipo);
     }
 
     public List<Habitacion> listarHabitaciones() {
@@ -53,7 +53,7 @@ public class ControladorHotel {
         return gestor.proximoCodigo();
     }
 
-    public Reserva registrarReserva(String idHuesped, String numeroHabitacion, String personasTexto,
+    public Reserva agregarReserva(String idHuesped, String numeroHabitacion, String personasTexto,
             LocalDate entrada, LocalDate salida) throws HotelException {
         int personas;
         try {
@@ -61,7 +61,7 @@ public class ControladorHotel {
         } catch (NumberFormatException ex) {
             throw new DatosInvalidosException("La cantidad de personas debe ser un número entero.");
         }
-        return gestor.registrarReserva(idHuesped, numeroHabitacion, personas, entrada, salida);
+        return gestor.agregarReserva(idHuesped, numeroHabitacion, personas, entrada, salida);
     }
 
     public List<Reserva> listarReservas() {
@@ -74,12 +74,12 @@ public class ControladorHotel {
         return new long[]{noches, noches * tarifa};
     }
 
-    public ResultadoDisponibilidad consultarDisponibilidad(LocalDate fecha) throws HotelException {
+    public ResultadoDisponibilidad buscarDisponibilidad(LocalDate fecha) throws HotelException {
         if (fecha == null) {
             throw new DatosInvalidosException("Seleccione una fecha.");
         }
         return new ResultadoDisponibilidad(fecha, gestor.contarDisponibles(fecha),
-                gestor.consultarDisponibles(fecha));
+                gestor.buscarHabitacionesDisponibles(fecha));
     }
 
     public Reserva buscarReserva(String codigo) throws HotelException {
@@ -109,7 +109,7 @@ public class ControladorHotel {
         return gestor.calcularIndicadores();
     }
 
-    public void cargarDatosDeEjemplo() throws HotelException {
-        gestor.cargarDatosDemo(LocalDate.now());
+    public void cargarDatosDePrueba() throws HotelException {
+        gestor.cargarDatosDePrueba(LocalDate.now());
     }
 }
