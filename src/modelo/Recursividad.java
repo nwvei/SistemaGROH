@@ -45,10 +45,10 @@ public final class Recursividad {
 
     public static boolean estaDisponibleEnFecha(Habitacion habitacion, List<Reserva> reservas,
             LocalDate fecha) {
-        for (Reserva r : reservas) {
-            if (r.getHabitacion().getNumero().equals(habitacion.getNumero())
-                    && r.getEstado().bloqueaDisponibilidad()
-                    && r.incluyeFecha(fecha)) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getHabitacion().getNumero().equals(habitacion.getNumero())
+                    && reserva.getEstado().bloqueaDisponibilidad()
+                    && reserva.incluyeFecha(fecha)) {
                 return false;
             }
         }
@@ -57,10 +57,10 @@ public final class Recursividad {
 
     public static boolean estaDisponibleEnPeriodo(Habitacion habitacion, List<Reserva> reservas,
             LocalDate entrada, LocalDate salida) {
-        for (Reserva r : reservas) {
-            if (r.getHabitacion().getNumero().equals(habitacion.getNumero())
-                    && r.getEstado().bloqueaDisponibilidad()
-                    && r.seSolapaCon(entrada, salida)) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getHabitacion().getNumero().equals(habitacion.getNumero())
+                    && reserva.getEstado().bloqueaDisponibilidad()
+                    && reserva.seSolapaCon(entrada, salida)) {
                 return false;
             }
         }
