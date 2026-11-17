@@ -31,18 +31,48 @@ public class PruebasHotel {
         LocalDate hoy = LocalDate.now();
 
         System.out.println("== Sesión ==");
-        esperaError("login inválido", () -> gestor.iniciarSesion("recepcion1", "mala"));
-        esperaError("reserva sin sesión", () -> gestor.agregarReserva("1", "101", 1, hoy, hoy.plusDays(1)));
+        try {
+            gestor.iniciarSesion("recepcion1", "mala");
+            marcar("login inválido" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("login inválido" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("1", "101", 1, hoy, hoy.plusDays(1));
+            marcar("reserva sin sesión" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("reserva sin sesión" + " → \"" + ex.getMessage() + "\"", true);
+        }
         verdad("login recepcion1", "recepcion1".equals(gestor.iniciarSesion("recepcion1", "Hotel123").getUsuario()));
-        esperaError("segunda sesión simultánea", () -> gestor.iniciarSesion("recepcion2", "Hotel456"));
+        try {
+            gestor.iniciarSesion("recepcion2", "Hotel456");
+            marcar("segunda sesión simultánea" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("segunda sesión simultánea" + " → \"" + ex.getMessage() + "\"", true);
+        }
 
         System.out.println("== Huéspedes ==");
         gestor.agregarHuesped("1", "Ana Torres", "0888-1122", "ana@correo.com");
         igual("teléfono conserva ceros", "0888-1122", gestor.listarHuespedes().get(0).getTelefono());
-        esperaError("identificación duplicada", () -> gestor.agregarHuesped("1", "Otro", "1", "o@o.com"));
-        esperaError("campo en blanco", () -> gestor.agregarHuesped("2", "   ", "1", "o@o.com"));
+        try {
+            gestor.agregarHuesped("1", "Otro", "1", "o@o.com");
+            marcar("identificación duplicada" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("identificación duplicada" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarHuesped("2", "   ", "1", "o@o.com");
+            marcar("campo en blanco" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("campo en blanco" + " → \"" + ex.getMessage() + "\"", true);
+        }
         for (String malo : new String[]{"sinarroba", "a@@b.com", "@b.com", "a@", "a@sinpunto", "a@b."}) {
-            esperaError("correo inválido " + malo, () -> gestor.agregarHuesped("9", "X", "1", malo));
+            try {
+                gestor.agregarHuesped("9", "X", "1", malo);
+                marcar("correo inválido " + malo + " (debía fallar)", false);
+            } catch (HotelException ex) {
+                marcar("correo inválido " + malo + " → \"" + ex.getMessage() + "\"", true);
+            }
         }
         gestor.agregarHuesped("2", "Luis Soto", "7000", "luis@x.co");
 
@@ -53,8 +83,18 @@ public class PruebasHotel {
         igual("individual", 1 + "/" + 25000, individual.getCapacidad() + "/" + individual.getTarifaPorNoche());
         igual("doble", 2 + "/" + 40000, doble.getCapacidad() + "/" + doble.getTarifaPorNoche());
         igual("familiar", 4 + "/" + 65000, familiar.getCapacidad() + "/" + familiar.getTarifaPorNoche());
-        esperaError("habitación duplicada", () -> gestor.agregarHabitacion("101", TipoHabitacion.DOBLE));
-        esperaError("número vacío", () -> gestor.agregarHabitacion(" ", TipoHabitacion.DOBLE));
+        try {
+            gestor.agregarHabitacion("101", TipoHabitacion.DOBLE);
+            marcar("habitación duplicada" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("habitación duplicada" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarHabitacion(" ", TipoHabitacion.DOBLE);
+            marcar("número vacío" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("número vacío" + " → \"" + ex.getMessage() + "\"", true);
+        }
         verdad("factory crea subclase correcta",
                 HabitacionFactory.crear("X", TipoHabitacion.DOBLE).getClass().getSimpleName().equals("HabitacionDoble"));
 
@@ -65,15 +105,50 @@ public class PruebasHotel {
         igual("importe", 120000L, r1.getImporteTotal());
         verdad("estado inicial Confirmada", r1.getEstado() == EstadoReserva.CONFIRMADA);
         verdad("recepcionista registrado", "recepcion1".equals(r1.getRecepcionista().getUsuario()));
-        esperaError("superpuesta", () -> gestor.agregarReserva("2", "102", 1, hoy.plusDays(4), hoy.plusDays(7)));
-        esperaError("superpuesta englobada", () -> gestor.agregarReserva("2", "102", 1, hoy.plusDays(1), hoy.plusDays(9)));
+        try {
+            gestor.agregarReserva("2", "102", 1, hoy.plusDays(4), hoy.plusDays(7));
+            marcar("superpuesta" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("superpuesta" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("2", "102", 1, hoy.plusDays(1), hoy.plusDays(9));
+            marcar("superpuesta englobada" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("superpuesta englobada" + " → \"" + ex.getMessage() + "\"", true);
+        }
         gestor.agregarReserva("2", "102", 1, hoy.plusDays(5), hoy.plusDays(6)); 
         gestor.agregarReserva("2", "102", 1, hoy.plusDays(1), hoy.plusDays(2)); 
-        esperaError("capacidad excedida", () -> gestor.agregarReserva("1", "101", 2, hoy, hoy.plusDays(1)));
-        esperaError("personas cero", () -> gestor.agregarReserva("1", "101", 0, hoy, hoy.plusDays(1)));
-        esperaError("entrada pasada", () -> gestor.agregarReserva("1", "101", 1, hoy.minusDays(1), hoy.plusDays(1)));
-        esperaError("salida no posterior", () -> gestor.agregarReserva("1", "101", 1, hoy, hoy));
-        esperaError("huésped inexistente", () -> gestor.agregarReserva("zz", "101", 1, hoy, hoy.plusDays(1)));
+        try {
+            gestor.agregarReserva("1", "101", 2, hoy, hoy.plusDays(1));
+            marcar("capacidad excedida" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("capacidad excedida" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("1", "101", 0, hoy, hoy.plusDays(1));
+            marcar("personas cero" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("personas cero" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("1", "101", 1, hoy.minusDays(1), hoy.plusDays(1));
+            marcar("entrada pasada" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("entrada pasada" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("1", "101", 1, hoy, hoy);
+            marcar("salida no posterior" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("salida no posterior" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.agregarReserva("zz", "101", 1, hoy, hoy.plusDays(1));
+            marcar("huésped inexistente" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("huésped inexistente" + " → \"" + ex.getMessage() + "\"", true);
+        }
 
         System.out.println("== Disponibilidad ==");
         verdad("102 bloqueada día de entrada", !gestor.buscarHabitacionesDisponibles(hoy.plusDays(2)).contains(doble));
@@ -85,18 +160,38 @@ public class PruebasHotel {
 
         System.out.println("== Check-in / check-out ==");
         Reserva hoyRes = gestor.agregarReserva("1", "101", 1, hoy, hoy.plusDays(2));
-        esperaError("check-in fuera de fecha", () -> gestor.realizarCheckIn(r1.getCodigo()));
+        try {
+            gestor.realizarCheckIn(r1.getCodigo());
+            marcar("check-in fuera de fecha" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("check-in fuera de fecha" + " → \"" + ex.getMessage() + "\"", true);
+        }
         gestor.realizarCheckIn(hoyRes.getCodigo());
         verdad("Hospedado", hoyRes.getEstado() == EstadoReserva.HOSPEDADO);
-        esperaError("check-in repetido", () -> gestor.realizarCheckIn(hoyRes.getCodigo()));
-        esperaError("check-out sin check-in", () -> gestor.realizarCheckOut(r1.getCodigo()));
+        try {
+            gestor.realizarCheckIn(hoyRes.getCodigo());
+            marcar("check-in repetido" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("check-in repetido" + " → \"" + ex.getMessage() + "\"", true);
+        }
+        try {
+            gestor.realizarCheckOut(r1.getCodigo());
+            marcar("check-out sin check-in" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("check-out sin check-in" + " → \"" + ex.getMessage() + "\"", true);
+        }
         Indicadores ind = gestor.calcularIndicadores();
         igual("ocupadas", 1, ind.getOcupadas());
         gestor.realizarCheckOut(hoyRes.getCodigo());
         verdad("Finalizada", hoyRes.getEstado() == EstadoReserva.FINALIZADA);
         igual("fecha salida real", hoy, hoyRes.getFechaSalidaReal());
         igual("importe intacto", 50000L, hoyRes.getImporteTotal());
-        esperaError("check-out repetido", () -> gestor.realizarCheckOut(hoyRes.getCodigo()));
+        try {
+            gestor.realizarCheckOut(hoyRes.getCodigo());
+            marcar("check-out repetido" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("check-out repetido" + " → \"" + ex.getMessage() + "\"", true);
+        }
         verdad("Finalizada libera disponibilidad", Recursividad.estaDisponibleEnPeriodo(individual, gestor.listarReservas(), hoy, hoy.plusDays(2)));
 
         System.out.println("== Vencimientos ==");
@@ -107,7 +202,12 @@ public class PruebasHotel {
         igual("supervisión real futura vence 3", 3, gestor.actualizarReservasVencidas(hoy.plusDays(10)));
         verdad("Vencida", r1.getEstado() == EstadoReserva.VENCIDA);
         verdad("Vencida libera disponibilidad", gestor.buscarHabitacionesDisponibles(hoy.plusDays(3)).contains(doble));
-        esperaError("Vencida no puede check-in", () -> gestor.realizarCheckIn(r1.getCodigo()));
+        try {
+            gestor.realizarCheckIn(r1.getCodigo());
+            marcar("Vencida no puede check-in" + " (debía fallar)", false);
+        } catch (HotelException ex) {
+            marcar("Vencida no puede check-in" + " → \"" + ex.getMessage() + "\"", true);
+        }
 
         System.out.println("== Recursividad (0, 1 y varios elementos) ==");
         igual("ingresos vacío", 0L, Recursividad.calcularIngresosEsperados(new ArrayList<>()));
@@ -144,21 +244,6 @@ public class PruebasHotel {
                 new ArrayList<>(gestor.listarHabitaciones().subList(0, 1)), new ArrayList<>(), hoy));
     }
 
-
-    private interface Accion {
-        void ejecutar() throws Exception;
-    }
-
-    private static void esperaError(String nombre, Accion accion) {
-        try {
-            accion.ejecutar();
-            marcar(nombre + " (debía fallar)", false);
-        } catch (HotelException ex) {
-            marcar(nombre + " → \"" + ex.getMessage() + "\"", true);
-        } catch (Exception ex) {
-            marcar(nombre + " lanzó " + ex, false);
-        }
-    }
 
     private static void verdad(String nombre, boolean condicion) {
         marcar(nombre, condicion);
