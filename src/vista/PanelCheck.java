@@ -15,16 +15,7 @@ public class PanelCheck extends javax.swing.JPanel implements Refrescable {
     public PanelCheck() {
         initComponents();
         TablaReservas.configurar(tblReservas);
-        tblReservas.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            @Override
-            public void valueChanged(javax.swing.event.ListSelectionEvent evento) {
-                int fila = tblReservas.getSelectedRow();
-                if (!evento.getValueIsAdjusting() && fila >= 0) {
-                    txtCodigo.setText(String.valueOf(tblReservas.getValueAt(fila, TablaReservas.COL_CODIGO)));
-                    buscar();
-                }
-            }
-        });
+        tblReservas.getSelectionModel().addListSelectionListener(new EscuchaSeleccion(this));
         refrescar();
     }
 
@@ -321,6 +312,14 @@ public class PanelCheck extends javax.swing.JPanel implements Refrescable {
             Dialogos.error(this, ex.getMessage());
         }
     }//GEN-LAST:event_btnProcesarActionPerformed
+
+    void seleccionarFila() {
+        int fila = tblReservas.getSelectedRow();
+        if (fila >= 0) {
+            txtCodigo.setText(String.valueOf(tblReservas.getValueAt(fila, TablaReservas.COL_CODIGO)));
+            buscar();
+        }
+    }
 
     private void buscar() {
         try {

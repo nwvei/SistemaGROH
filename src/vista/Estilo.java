@@ -5,7 +5,6 @@
 package vista;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.time.LocalDate;
@@ -13,14 +12,12 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import modelo.EstadoReserva;
 
 final class Estilo {
     static final Color AZUL = new Color(21, 83, 163);
@@ -115,34 +112,7 @@ final class Estilo {
     }
 
     static void renderizarEstado(JTable tabla, int columna) {
-        tabla.getColumnModel().getColumn(columna).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable tablaCelda, Object valor, boolean seleccionada,
-                    boolean foco, int fila, int col) {
-                JLabel etiqueta = (JLabel) super.getTableCellRendererComponent(tablaCelda, valor, seleccionada, foco, fila, col);
-                etiqueta.setHorizontalAlignment(SwingConstants.CENTER);
-                String texto = String.valueOf(valor);
-                Color fondo = Color.WHITE;
-                Color letra = TEXTO;
-                if (texto.equals(EstadoReserva.CONFIRMADA.toString())) {
-                    fondo = AZUL_CLARO;
-                    letra = AZUL;
-                } else if (texto.equals(EstadoReserva.HOSPEDADO.toString())) {
-                    fondo = VERDE_CLARO;
-                    letra = VERDE;
-                } else if (texto.equals(EstadoReserva.VENCIDA.toString())) {
-                    fondo = ROJO_CLARO;
-                    letra = ROJO;
-                } else if (texto.equals(EstadoReserva.FINALIZADA.toString())) {
-                    fondo = new Color(232, 234, 238);
-                    letra = GRIS;
-                }
-                etiqueta.setBackground(fondo);
-                etiqueta.setForeground(letra);
-                etiqueta.setFont(FUENTE_NEGRITA);
-                return etiqueta;
-            }
-        });
+        tabla.getColumnModel().getColumn(columna).setCellRenderer(new RenderizadorEstado());
     }
 
     static void alinearDerecha(JTable tabla, int columna) {

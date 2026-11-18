@@ -5,13 +5,11 @@
 package vista;
 
 import Excepciones.HotelException;
-import Hilos.Notificador;
 import controlador.ControladorHotel;
 import controlador.ControladorProcesos;
-import javax.swing.SwingUtilities;
 import modelo.Indicadores;
 
-public class PanelInicio extends javax.swing.JPanel implements Refrescable, Notificador {
+public class PanelInicio extends javax.swing.JPanel implements Refrescable {
     private final ControladorHotel controlador = new ControladorHotel();
     private final ControladorProcesos procesos = new ControladorProcesos();
 
@@ -335,7 +333,7 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable, Noti
             txtLog.setText("");
             btnProcesos.setEnabled(false);
             lblEstado.setText("Procesos en ejecución…");
-            procesos.iniciar(this);
+            procesos.iniciar(new NotificadorPanel(this));
         } catch (HotelException ex) {
             btnProcesos.setEnabled(false);
             Dialogos.error(this, ex.getMessage());
@@ -353,42 +351,12 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable, Noti
         }
     }//GEN-LAST:event_btnDemoActionPerformed
 
-    @Override
-    public void mostrarMensaje(final String mensaje) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                agregarLog(mensaje);
-            }
-        });
-    }
-
-    @Override
-    public void mostrarIndicadores(final Indicadores indicadores) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                mostrar(indicadores);
-            }
-        });
-    }
-
-    @Override
-    public void procesosTerminados() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                alTerminarProcesos();
-            }
-        });
-    }
-
-    private void alTerminarProcesos() {
+    void alTerminarProcesos() {
         btnProcesos.setEnabled(true);
         lblEstado.setText("Procesos finalizados.");
     }
 
-    private void agregarLog(String linea) {
+    void agregarLog(String linea) {
         txtLog.append(linea + "\n");
         txtLog.setCaretPosition(txtLog.getDocument().getLength());
     }

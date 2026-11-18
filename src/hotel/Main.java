@@ -6,7 +6,7 @@ package hotel;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import vista.FrmLogin;
+import vista.AbrirLogin;
 
 /**
  *
@@ -19,11 +19,6 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new FrmLogin().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(new AbrirLogin());
     }
 }
