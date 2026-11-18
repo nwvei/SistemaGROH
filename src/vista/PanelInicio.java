@@ -21,6 +21,7 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         pnlBanner = new javax.swing.JPanel();
         lblBienvenida = new javax.swing.JLabel();
         lblModulos = new javax.swing.JLabel();
@@ -48,22 +49,18 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblDescripcion = new javax.swing.JLabel();
         btnProcesos = new javax.swing.JButton();
         btnDemo = new javax.swing.JButton();
-        lblEstado = new javax.swing.JLabel();
-        scrLog = new javax.swing.JScrollPane();
-        txtLog = new javax.swing.JTextArea();
-        lblNota = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(244, 247, 252));
 
         pnlBanner.setBackground(new java.awt.Color(12, 44, 96));
 
-        lblBienvenida.setText("Bienvenido al Sistema de Gestión Hotelera");
         lblBienvenida.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         lblBienvenida.setForeground(new java.awt.Color(255, 255, 255));
+        lblBienvenida.setText("Bienvenido al Sistema de Gestión Hotelera");
 
-        lblModulos.setText("Huéspedes · Habitaciones · Reservas · Disponibilidad · Check-in / Check-out");
         lblModulos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblModulos.setForeground(new java.awt.Color(200, 220, 250));
+        lblModulos.setText("Huéspedes · Habitaciones · Reservas · Disponibilidad · Check-in / Check-out");
 
         javax.swing.GroupLayout pnlBannerLayout = new javax.swing.GroupLayout(pnlBanner);
         pnlBanner.setLayout(pnlBannerLayout);
@@ -72,23 +69,22 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
             .addGroup(pnlBannerLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(pnlBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblModulos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGap(22, 22, 22))
+                    .addComponent(lblBienvenida)
+                    .addComponent(lblModulos))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         pnlBannerLayout.setVerticalGroup(
             pnlBannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBannerLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblBienvenida)
                 .addGap(2, 2, 2)
-                .addComponent(lblModulos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblModulos)
                 .addGap(14, 14, 14))
         );
 
         pnlIndicadores.setBackground(new java.awt.Color(255, 255, 255));
-        pnlIndicadores.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 212, 230)), " Indicadores del hotel ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(21, 83, 163))); // NOI18N
+        pnlIndicadores.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Indicadores del hotel ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(21, 83, 163))); // NOI18N
 
         pnlTarjetas.setOpaque(false);
         pnlTarjetas.setLayout(new java.awt.GridLayout(2, 3, 12, 12));
@@ -101,13 +97,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitTotal.setForeground(new java.awt.Color(21, 83, 163));
         lblTitTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlTotal.add(lblTitTotal, java.awt.BorderLayout.NORTH);
+        pnlTotal.add(lblTitTotal);
 
         lblValTotal.setText("0");
         lblValTotal.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValTotal.setForeground(new java.awt.Color(21, 83, 163));
         lblValTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlTotal.add(lblValTotal, java.awt.BorderLayout.CENTER);
+        pnlTotal.add(lblValTotal);
+
         pnlTarjetas.add(pnlTotal);
 
         pnlOcupadas.setBackground(new java.awt.Color(253, 228, 228));
@@ -118,13 +115,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitOcupadas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitOcupadas.setForeground(new java.awt.Color(197, 48, 48));
         lblTitOcupadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlOcupadas.add(lblTitOcupadas, java.awt.BorderLayout.NORTH);
+        pnlOcupadas.add(lblTitOcupadas);
 
         lblValOcupadas.setText("0");
         lblValOcupadas.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValOcupadas.setForeground(new java.awt.Color(197, 48, 48));
         lblValOcupadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlOcupadas.add(lblValOcupadas, java.awt.BorderLayout.CENTER);
+        pnlOcupadas.add(lblValOcupadas);
+
         pnlTarjetas.add(pnlOcupadas);
 
         pnlNoOcupadas.setBackground(new java.awt.Color(220, 245, 228));
@@ -135,13 +133,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitNoOcupadas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitNoOcupadas.setForeground(new java.awt.Color(40, 150, 85));
         lblTitNoOcupadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlNoOcupadas.add(lblTitNoOcupadas, java.awt.BorderLayout.NORTH);
+        pnlNoOcupadas.add(lblTitNoOcupadas);
 
         lblValNoOcupadas.setText("0");
         lblValNoOcupadas.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValNoOcupadas.setForeground(new java.awt.Color(40, 150, 85));
         lblValNoOcupadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlNoOcupadas.add(lblValNoOcupadas, java.awt.BorderLayout.CENTER);
+        pnlNoOcupadas.add(lblValNoOcupadas);
+
         pnlTarjetas.add(pnlNoOcupadas);
 
         pnlConfirmadas.setBackground(new java.awt.Color(226, 238, 252));
@@ -152,13 +151,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitConfirmadas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitConfirmadas.setForeground(new java.awt.Color(21, 83, 163));
         lblTitConfirmadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlConfirmadas.add(lblTitConfirmadas, java.awt.BorderLayout.NORTH);
+        pnlConfirmadas.add(lblTitConfirmadas);
 
         lblValConfirmadas.setText("0");
         lblValConfirmadas.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValConfirmadas.setForeground(new java.awt.Color(21, 83, 163));
         lblValConfirmadas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlConfirmadas.add(lblValConfirmadas, java.awt.BorderLayout.CENTER);
+        pnlConfirmadas.add(lblValConfirmadas);
+
         pnlTarjetas.add(pnlConfirmadas);
 
         pnlVencidas.setBackground(new java.awt.Color(253, 228, 228));
@@ -169,13 +169,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitVencidas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitVencidas.setForeground(new java.awt.Color(197, 48, 48));
         lblTitVencidas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlVencidas.add(lblTitVencidas, java.awt.BorderLayout.NORTH);
+        pnlVencidas.add(lblTitVencidas);
 
         lblValVencidas.setText("0");
         lblValVencidas.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValVencidas.setForeground(new java.awt.Color(197, 48, 48));
         lblValVencidas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlVencidas.add(lblValVencidas, java.awt.BorderLayout.CENTER);
+        pnlVencidas.add(lblValVencidas);
+
         pnlTarjetas.add(pnlVencidas);
 
         pnlIngresos.setBackground(new java.awt.Color(255, 243, 214));
@@ -186,13 +187,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         lblTitIngresos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitIngresos.setForeground(new java.awt.Color(150, 90, 0));
         lblTitIngresos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlIngresos.add(lblTitIngresos, java.awt.BorderLayout.NORTH);
+        pnlIngresos.add(lblTitIngresos);
 
         lblValIngresos.setText("0");
         lblValIngresos.setFont(new java.awt.Font("Segoe UI", 1, 30)); // NOI18N
         lblValIngresos.setForeground(new java.awt.Color(150, 90, 0));
         lblValIngresos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        pnlIngresos.add(lblValIngresos, java.awt.BorderLayout.CENTER);
+        pnlIngresos.add(lblValIngresos);
+
         pnlTarjetas.add(pnlIngresos);
 
         javax.swing.GroupLayout pnlIndicadoresLayout = new javax.swing.GroupLayout(pnlIndicadores);
@@ -213,11 +215,11 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
         );
 
         pnlProcesos.setBackground(new java.awt.Color(255, 255, 255));
-        pnlProcesos.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 212, 230)), " Procesos de supervisión (ejecución concurrente) ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(21, 83, 163))); // NOI18N
+        pnlProcesos.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Procesos de supervisión (ejecución concurrente) ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14), new java.awt.Color(21, 83, 163))); // NOI18N
 
-        lblDescripcion.setText("<html>Ejecuta dos hilos a la vez, cinco ciclos cada uno:<br>• <b>SupervisorReservas</b>: pasa a Vencida las reservas Confirmadas con entrada anterior a hoy.<br>• <b>ActualizadorIndicadores</b>: recalcula los indicadores del hotel.</html>");
         lblDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblDescripcion.setForeground(new java.awt.Color(30, 41, 64));
+        lblDescripcion.setText("<html>Ejecuta dos hilos a la vez, cinco ciclos cada uno:<br>• <b>SupervisorReservas</b>: pasa a Vencida las reservas Confirmadas con entrada anterior a hoy.<br>• <b>ActualizadorIndicadores</b>: recalcula los indicadores del hotel.</html>");
 
         btnProcesos.setBackground(new java.awt.Color(21, 83, 163));
         btnProcesos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -249,25 +251,6 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
             }
         });
 
-        lblEstado.setText("Procesos detenidos.");
-        lblEstado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblEstado.setForeground(new java.awt.Color(30, 41, 64));
-
-        scrLog.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 212, 230)));
-
-        txtLog.setBackground(new java.awt.Color(20, 28, 44));
-        txtLog.setEditable(false);
-        txtLog.setForeground(new java.awt.Color(190, 235, 200));
-        txtLog.setColumns(40);
-        txtLog.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-        txtLog.setRows(7);
-        txtLog.setMargin(new java.awt.Insets(6, 8, 6, 8));
-        scrLog.setViewportView(txtLog);
-
-        lblNota.setText("Los mensajes también se muestran en la consola de salida de NetBeans.");
-        lblNota.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblNota.setForeground(new java.awt.Color(30, 41, 64));
-
         javax.swing.GroupLayout pnlProcesosLayout = new javax.swing.GroupLayout(pnlProcesos);
         pnlProcesos.setLayout(pnlProcesosLayout);
         pnlProcesosLayout.setHorizontalGroup(
@@ -277,30 +260,21 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
                 .addGroup(pnlProcesosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlProcesosLayout.createSequentialGroup()
-                        .addComponent(btnProcesos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnProcesos)
                         .addGap(10, 10, 10)
-                        .addComponent(btnDemo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scrLog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10))
+                        .addComponent(btnDemo)))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         pnlProcesosLayout.setVerticalGroup(
             pnlProcesosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlProcesosLayout.createSequentialGroup()
                 .addGap(8, 8, 8)
-                .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlProcesosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnProcesos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDemo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8)
-                .addComponent(scrLog, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                .addGap(8, 8, 8)
-                .addComponent(lblNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
+                    .addComponent(btnProcesos)
+                    .addComponent(btnDemo))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -323,16 +297,14 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
                 .addGap(14, 14, 14)
                 .addComponent(pnlIndicadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
-                .addComponent(pnlProcesos, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addComponent(pnlProcesos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(16, 16, 16))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProcesosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcesosActionPerformed
-        try {
-            txtLog.setText("");
+        try{
             btnProcesos.setEnabled(false);
-            lblEstado.setText("Procesos en ejecución…");
             procesos.iniciar(new NotificadorPanel(this));
         } catch (HotelException ex) {
             btnProcesos.setEnabled(false);
@@ -353,13 +325,8 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
 
     void alTerminarProcesos() {
         btnProcesos.setEnabled(true);
-        lblEstado.setText("Procesos finalizados.");
     }
 
-    void agregarLog(String linea) {
-        txtLog.append(linea + "\n");
-        txtLog.setCaretPosition(txtLog.getDocument().getLength());
-    }
 
     void detenerProcesos() {
         procesos.detener();
@@ -384,9 +351,7 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
     private javax.swing.JButton btnProcesos;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblDescripcion;
-    private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblModulos;
-    private javax.swing.JLabel lblNota;
     private javax.swing.JLabel lblTitConfirmadas;
     private javax.swing.JLabel lblTitIngresos;
     private javax.swing.JLabel lblTitNoOcupadas;
@@ -409,7 +374,5 @@ public class PanelInicio extends javax.swing.JPanel implements Refrescable {
     private javax.swing.JPanel pnlTarjetas;
     private javax.swing.JPanel pnlTotal;
     private javax.swing.JPanel pnlVencidas;
-    private javax.swing.JScrollPane scrLog;
-    private javax.swing.JTextArea txtLog;
     // End of variables declaration//GEN-END:variables
 }

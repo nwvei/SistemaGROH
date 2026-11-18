@@ -26,9 +26,6 @@ class TareaVista implements Runnable {
 
     @Override
     public void run() {
-        if (mensaje != null) {
-            panel.agregarLog(mensaje);
-        }
         if (indicadores != null) {
             panel.mostrar(indicadores);
         }
